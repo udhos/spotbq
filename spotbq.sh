@@ -42,7 +42,7 @@ upload() {
 	# YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S
 	now=$(date +'%Y-%m-%d %H:%M:%S') 
 	printf "\"$now\",\"$id\",\"$lifecycle\",\"$m\"\n" > data.csv
-	cat data.csv
+	#cat data.csv
 	bq load --source_format=CSV $PROJECT_ID:$DATASET.$TABLE data.csv schema.json
 }
 
