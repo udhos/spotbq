@@ -49,6 +49,6 @@ upload() {
 upload boot
 
 while :; do
-	sleep 5
+	sleep 300
 	upload ping
 done
