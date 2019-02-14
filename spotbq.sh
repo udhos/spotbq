@@ -11,7 +11,7 @@ die() {
 
 tmp=/tmp/eraseme
 
-id=$(curl http://169.254.169.254/latest/meta-data/instance-id || curl meta-data failure)
+id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id || curl meta-data failure)
 
 [[ $id = i-* ]] || msg bad instanceid=$id
 
