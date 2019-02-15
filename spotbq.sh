@@ -13,8 +13,10 @@ msg $0 version 0.1
 msg user: $(id)
 
 schema=schema.json
+delay=600
 
 [ -z "$SCHEMA" ] && SCHEMA=$schema
+[ -z "$DELAY" ] && DELAY=$delay
 
 cat <<__EOF__
 PROJECT_ID=$PROJECT_ID
@@ -22,6 +24,7 @@ DATASET=$DATASET
 TABLE=$TABLE
 DRY=$DRY
 SCHEMA=$SCHEMA
+DELAY=$DELAY
 __EOF__
 
 [ -r "$SCHEMA" ] || die missing schema file $SCHEMA
@@ -75,7 +78,7 @@ upload() {
 upload boot
 
 while :; do
-	sleep 600
+	sleep $DELAY
 	upload ping
 done
 
