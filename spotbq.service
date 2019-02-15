@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-User=root
+User=ec2-user
 WorkingDirectory=/home/ec2-user/spotbq
 ExecStart=/home/ec2-user/spotbq/run-spotbq.sh
 Restart=on-failure

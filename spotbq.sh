@@ -59,7 +59,8 @@ upload() {
 	# YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S
 	now=$(date +'%Y-%m-%d %H:%M:%S') 
 	printf "\"$now\",\"$id\",\"$lifecycle\",\"$m\"\n" > $tmpcsv
-	cmd="bq load --source_format=CSV $PROJECT_ID:$DATASET.$TABLE $tmpcsv $SCHEMA"
+	bigquery=~/google-cloud-sdk/bin/bq
+	cmd="$bigquery load --source_format=CSV $PROJECT_ID:$DATASET.$TABLE $tmpcsv $SCHEMA"
 	if dry_run; then
 		msg DRY mode, data.csv is:
 		cat $tmpcsv
