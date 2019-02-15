@@ -9,6 +9,9 @@ die() {
 	exit 1
 }
 
+msg $0 version 0.1
+msg user: $(id)
+
 schema=schema.json
 
 [ -z "$SCHEMA" ] && SCHEMA=$schema
