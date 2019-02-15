@@ -57,9 +57,10 @@ fi
 
 upload() {
 	local m="$*"
-	# YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S
-	now=$(date +'%Y-%m-%d %H:%M:%S') 
-	printf "\"$now\",\"$id\",\"$inst_type\",\"$inst_lifecycle\",\"$m\"\n" > $tmpcsv
+	local now=$(date +'%Y-%m-%d %H:%M:%S') 
+	local uptime=$(uptime -p)
+
+	printf "\"$now\",\"$id\",\"$inst_type\",\"$inst_lifecycle\",\"$m\",\"$uptime\"\n" > $tmpcsv
 	bigquery=~/google-cloud-sdk/bin/bq
 	cmd="$bigquery load --source_format=CSV $PROJECT_ID:$DATASET.$TABLE $tmpcsv $SCHEMA"
 	if dry_run; then

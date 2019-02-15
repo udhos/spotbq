@@ -18,5 +18,9 @@
   {
     "name": "message",
     "type": "STRING"
+  },
+  {
+    "name": "uptime",
+    "type": "STRING"
   }
 ]
