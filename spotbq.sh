@@ -35,7 +35,7 @@ dry_run() {
 [ -z "$TABLE" ] && die missing TABLE
 dry_run && msg DRY mode
 
-tmpid=/tmp/eraseme
+tmpdesc=/tmp/eraseme
 tmpcsv=/tmp/data.csv
 
 id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id || curl meta-data failure)
@@ -44,21 +44,22 @@ id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id || curl meta-da
 
 msg instanceid=$id
 
-aws ec2 describe-instances --region sa-east-1 --instance-ids $id > $tmpid || msg describe-instances failure
+aws ec2 describe-instances --region sa-east-1 --instance-ids $id > $tmpdesc || msg describe-instances failure
 
-lifecycle=$(jq -r '.Reservations[0].Instances[0].InstanceLifecycle' < $tmpid || msg jq lifecycle failure)
+inst_type=$(jq -r '.Reservations[0].Instances[0].InstanceType' < $tmpdesc || msg jq lifecycle failure)
+inst_lifecycle=$(jq -r '.Reservations[0].Instances[0].InstanceLifecycle' < $tmpdesc || msg jq lifecycle failure)
 
-msg lifecycle=$lifecycle
+msg type=$inst_type lifecycle=$inst_lifecycle
 
-if [ "$lifecycle" != spot ]; then
-	lifecycle=non-spot
+if [ "$inst_lifecycle" != spot ]; then
+	inst_lifecycle=non-spot
 fi
 
 upload() {
 	local m="$*"
 	# YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S
 	now=$(date +'%Y-%m-%d %H:%M:%S') 
-	printf "\"$now\",\"$id\",\"$lifecycle\",\"$m\"\n" > $tmpcsv
+	printf "\"$now\",\"$id\",\"$inst_type\",\"$inst_lifecycle\",\"$m\"\n" > $tmpcsv
 	bigquery=~/google-cloud-sdk/bin/bq
 	cmd="$bigquery load --source_format=CSV $PROJECT_ID:$DATASET.$TABLE $tmpcsv $SCHEMA"
 	if dry_run; then

@@ -4,11 +4,15 @@
     "type": "TIMESTAMP"
   },
   {
-    "name": "instance_id",
+    "name": "id",
     "type": "STRING"
   },
   {
-    "name": "instance_type",
+    "name": "type",
+    "type": "STRING"
+  },
+  {
+    "name": "lifecycle",
     "type": "STRING"
   },
   {
