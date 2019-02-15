@@ -9,11 +9,16 @@ die() {
 	exit 1
 }
 
-msg $0 version 0.1
+msg version: 0.2
 msg user: $(id)
 
+bigquery=~/google-cloud-sdk/bin/bq
 schema=schema.json
 delay=600
+
+[ -x "$bigquery" ] || die missing gcp bq: $bigquery
+hash jq || die missing jq
+hash aws || die missing aws cli
 
 [ -z "$SCHEMA" ] && SCHEMA=$schema
 [ -z "$DELAY" ] && DELAY=$delay
@@ -64,7 +69,6 @@ upload() {
 	local upt=$(uptime -p)
 
 	printf "\"$now\",\"$id\",\"$inst_type\",\"$inst_lifecycle\",\"$m\",\"$upt\"\n" > $tmpcsv
-	bigquery=~/google-cloud-sdk/bin/bq
 	cmd="$bigquery load --source_format=CSV $PROJECT_ID:$DATASET.$TABLE $tmpcsv $SCHEMA"
 	if dry_run; then
 		msg DRY mode, data.csv is:
