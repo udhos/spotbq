@@ -18,6 +18,7 @@
     export PROJECT_ID=projectid
     export DATASET=datasetname
     export TABLE=tablename
+    export DRY= ;# set for DRY run
 
     bq mk --dataset $PROJECT_ID:$DATASET
     bq mk --table $PROJECT_ID:$DATASET.$TABLE schema.json
@@ -27,6 +28,7 @@
     export PROJECT_ID=projectid
     export DATASET=datasetname
     export TABLE=tablename
+    export DRY= ;# set for DRY run
 
     ./spotbq.sh
 
