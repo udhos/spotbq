@@ -35,7 +35,7 @@ dry_run() {
 [ -z "$TABLE" ] && die missing TABLE
 dry_run && msg DRY mode
 
-tmpdesc=/tmp/eraseme
+tmpdesc=/tmp/desc.json
 tmpcsv=/tmp/data.csv
 
 id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id || curl meta-data failure)
@@ -46,7 +46,7 @@ msg instanceid=$id
 
 aws ec2 describe-instances --region sa-east-1 --instance-ids $id > $tmpdesc || msg describe-instances failure
 
-inst_type=$(jq -r '.Reservations[0].Instances[0].InstanceType' < $tmpdesc || msg jq lifecycle failure)
+inst_type=$(jq -r '.Reservations[0].Instances[0].InstanceType' < $tmpdesc || msg jq type failure)
 inst_lifecycle=$(jq -r '.Reservations[0].Instances[0].InstanceLifecycle' < $tmpdesc || msg jq lifecycle failure)
 
 msg type=$inst_type lifecycle=$inst_lifecycle
