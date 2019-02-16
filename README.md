@@ -2,6 +2,10 @@
 
 # Install GCP SDK
 
+See: https://cloud.google.com/sdk/docs/quickstart-linux
+
+Recipe:
+
     wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-231.0.0-linux-x86_64.tar.gz
     tar xf google-cloud-sdk-231.0.0-linux-x86_64.tar.gz
     ./google-cloud-sdk/install.sh
