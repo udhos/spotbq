@@ -1,5 +1,9 @@
 [
   {
+    "name": "seq",
+    "type": "INT64"
+  },
+  {
     "name": "time",
     "type": "TIMESTAMP"
   },

@@ -52,7 +52,7 @@ id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id || curl meta-da
 
 msg instanceid=$id
 
-aws ec2 describe-instances --region sa-east-1 --instance-ids $id > $tmpdesc || msg describe-instances failure
+aws ec2 describe-instances --region sa-east-1 --instance-ids "$id" > $tmpdesc || msg describe-instances failure
 
 inst_type=$(jq -r '.Reservations[0].Instances[0].InstanceType' < $tmpdesc || msg jq type failure)
 inst_lifecycle=$(jq -r '.Reservations[0].Instances[0].InstanceLifecycle' < $tmpdesc || msg jq lifecycle failure)
@@ -68,7 +68,9 @@ upload() {
 	local now=$(date +'%Y-%m-%d %H:%M:%S') 
 	local upt=$(uptime -p)
 
-	printf "\"$now\",\"$id\",\"$inst_type\",\"$inst_lifecycle\",\"$m\",\"$upt\"\n" > $tmpcsv
+	(( counter += 1 )) 
+
+	printf "\"$counter\",\"$now\",\"$id\",\"$inst_type\",\"$inst_lifecycle\",\"$m\",\"$upt\"\n" > $tmpcsv
 	cmd="$bigquery load --source_format=CSV $PROJECT_ID:$DATASET.$TABLE $tmpcsv $SCHEMA"
 	if dry_run; then
 		msg DRY mode, data.csv is:
