@@ -44,7 +44,7 @@ dry_run() {
 dry_run && msg DRY mode
 
 tmpdesc=/tmp/desc.json
-tmpcsv=/tmp/data.csv
+tmpjson=/tmp/upload-data.json
 
 id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id || curl meta-data failure)
 
@@ -70,11 +70,14 @@ upload() {
 
 	(( counter += 1 )) 
 
-	printf "\"$counter\",\"$now\",\"$id\",\"$inst_type\",\"$inst_lifecycle\",\"$m\",\"$upt\"\n" > $tmpcsv
-	cmd="$bigquery load --source_format=CSV $PROJECT_ID:$DATASET.$TABLE $tmpcsv $SCHEMA"
+	cat <<__EOF__ >$tmpjson
+{"seq": "$counter","time": "$now","id": "$id","type": "$inst_type","lifecycle": "$inst_lifecycle","message": "$m","uptime": "$upt"}
+__EOF__
+
+	cmd="$bigquery load --source_format=NEWLINE_DELIMITED_JSON $PROJECT_ID:$DATASET.$TABLE $tmpjson $SCHEMA"
 	if dry_run; then
-		msg DRY mode, data.csv is:
-		cat $tmpcsv
+		msg DRY mode, upload data is:
+		cat $tmpjson
 		msg DRY mode, skipping: $cmd
 	else
 		$cmd
